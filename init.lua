@@ -17,7 +17,9 @@ vim.opt.rtp:prepend(lazypath)
 require("vim-options")
 require("lazy").setup("plugins")
 
-
+if vim.fn.executable("xclip") == 1 then
+    vim.opt.clipboard = "unnamedplus"
+end
 
 
 
