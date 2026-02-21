@@ -14,6 +14,18 @@ return {
 					hide_dotfiles = false,
 					hide_gitignored = false,
 				},
+				window = {
+					mappings = {
+						["Y"] = function(state)
+							-- Get the node
+							local node = state.tree:get_node()
+							local path = node.path
+							-- Copy to system clipboard
+							vim.fn.setreg("+", path)
+							vim.notify("Copied path: " .. path)
+						end,
+					},
+				},
 			},
 		})
 		vim.keymap.set("n", "<C-n>", ":Neotree filesystem reveal left<CR>", {})
