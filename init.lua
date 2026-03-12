@@ -17,9 +17,19 @@ vim.opt.rtp:prepend(lazypath)
 require("vim-options")
 require("lazy").setup("plugins")
 
-if vim.fn.executable("xclip") == 1 then
-    vim.opt.clipboard = "unnamedplus"
-end
+vim.g.clipboard = {
+  name = 'osc 52',
+  copy = {
+    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+  },
+  paste = {
+    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+  },
+}
+
+vim.opt.clipboard = "unnamedplus"
 
 
 
