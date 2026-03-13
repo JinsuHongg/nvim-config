@@ -29,6 +29,7 @@ return {
       pattern = 'dap-repl',
       callback = function()
         require('dap.ext.autocompl').attach()
+        vim.opt_local.completeopt = 'menuone,noinsert,noselect'
       end,
     })
 
