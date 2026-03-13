@@ -27,7 +27,9 @@ return {
 
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'dap-repl',
-      callback = require('dap.ext.autocompl').attach,
+      callback = function()
+        require('dap.ext.autocompl').attach()
+      end,
     })
 
 		vim.fn.sign_define("DapBreakpoint", {
