@@ -25,6 +25,11 @@ return {
 			dapui.close()
 		end
 
+    vim.api.nvim_create_autocmd('FileType', {
+      pattern = 'dap-repl',
+      callback = require('dap.ext.autocompl').attach,
+    })
+
 		vim.fn.sign_define("DapBreakpoint", {
 			text = "🔴",
 			texthl = "DapBreakpoint",
