@@ -9,36 +9,77 @@ return {
 		local dap = require("dap")
 		local dapui = require("dapui")
 
-		require("dapui").setup()
-		require("dap-python").setup("uv")
+    require("dapui").setup({
+			layouts = {
+				{
+					-- The left sidebar (scopes, breakpoints, etc.)
+					elements = {
+						{ id = "scopes", size = 0.25 },
+						{ id = "breakpoints", size = 0.25 },
+						{ id = "stacks", size = 0.25 },
+						{ id = "watches", size = 0.25 },
+					},
+					position = "left",
+					size = 40, -- Width of the left sidebar
+				},
+				{
+					-- The bottom tray (REPL and console)
+					elements = {
+						{ id = "repl", size = 0.5 },
+						{ id = "console", size = 0.5 },
+					},
+					position = "bottom",
+					size = 15, -- Lowered to 15 so it fits on most screens
+				},
+			},
+		})		
+    require("dap-python").setup("python")
     require("dap-python").test_runner = "pytest"
+    for _, config in pairs(require("dap").configurations.python or {}) do
+        config.console = "internalConsole"
+    end
     require('dap').defaults.fallback.focus_terminal = false
-		-- Horizontal split height (lines)
-    dap.defaults.fallback.terminal_win_cmd = "botright 25split"  -- 15 lines
 
-    -- Open UI on session start
-    dap.listeners.before.event_initialized["dapui_config"] = function()
-      dapui.open()
-    end
+		dap.defaults.fallback.terminal_win_cmd = "botright 15split new"
+    
+    -- Track whether session stopped due to exception
+		local stopped_on_exception = false
+		-- Variable to store our window layout snapshot
+		local window_layout = ""
 
-    -- Close UI only if session ended normally
-    dap.listeners.after.event_terminated["dapui_config"] = function(session)
-      if not session then return end  -- safety
-      -- Check if the session stopped due to an exception
-      if session.exception_info then
-        -- keep UI open
-        return
-      end
-      dapui.close()
-    end
+		dap.listeners.after.event_stopped["dapui_config"] = function(session, body)
+			if body and body.reason == "exception" then
+				stopped_on_exception = true
+			end
+		end
 
-    dap.listeners.after.event_exited["dapui_config"] = function(session)
-      if not session then return end
-      if session.exception_info then
-        return
-      end
-      dapui.close()
-    end
+		dap.listeners.before.event_initialized["dapui_config"] = function()
+			stopped_on_exception = false  -- reset on new session
+			-- 1. Take a snapshot of window sizes before opening DAP UI
+			window_layout = vim.fn.winrestcmd() 
+			dapui.open()
+		end
+
+		dap.listeners.after.event_terminated["dapui_config"] = function()
+			if not stopped_on_exception then
+				dapui.close()
+				-- 2. Restore the window sizes after closing DAP UI
+				vim.schedule(function()
+					if window_layout ~= "" then vim.cmd(window_layout) end
+				end)
+			end
+		end
+
+		dap.listeners.after.event_exited["dapui_config"] = function(_, body)
+			if body and body.exitCode ~= 0 then return end  -- non-zero exit, keep open
+			if not stopped_on_exception then
+				dapui.close()
+				-- 2. Restore the window sizes after closing DAP UI
+				vim.schedule(function()
+					if window_layout ~= "" then vim.cmd(window_layout) end
+				end)
+			end
+		end
 
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'dap-repl',
