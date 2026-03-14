@@ -11,20 +11,34 @@ return {
 
 		require("dapui").setup()
 		require("dap-python").setup("uv")
-    require('dap').defaults.fallback.focus_terminal = true
-		
-    dap.listeners.before.attach.dapui_config = function()
-			dapui.open()
-		end
-		dap.listeners.before.launch.dapui_config = function()
-			dapui.open()
-		end
-		-- dap.listeners.before.event_terminated.dapui_config = function()
-		-- 	dapui.close()
-		-- end
-		-- dap.listeners.before.event_exited.dapui_config = function()
-		-- 	dapui.close()
-		-- end
+    require("dap-python").test_runner = "pytest"
+    require('dap').defaults.fallback.focus_terminal = false
+		-- Horizontal split height (lines)
+    dap.defaults.fallback.terminal_win_cmd = "botright 25split"  -- 15 lines
+
+    -- Open UI on session start
+    dap.listeners.before.event_initialized["dapui_config"] = function()
+      dapui.open()
+    end
+
+    -- Close UI only if session ended normally
+    dap.listeners.after.event_terminated["dapui_config"] = function(session)
+      if not session then return end  -- safety
+      -- Check if the session stopped due to an exception
+      if session.exception_info then
+        -- keep UI open
+        return
+      end
+      dapui.close()
+    end
+
+    dap.listeners.after.event_exited["dapui_config"] = function(session)
+      if not session then return end
+      if session.exception_info then
+        return
+      end
+      dapui.close()
+    end
 
     vim.api.nvim_create_autocmd('FileType', {
       pattern = 'dap-repl',
