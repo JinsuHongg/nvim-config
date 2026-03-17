@@ -14,8 +14,8 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	end
 end
 vim.opt.rtp:prepend(lazypath)
+
 require("vim-options")
-require("config.lazy")
 
 vim.g.clipboard = {
 	name = "osc52",
@@ -28,5 +28,6 @@ vim.g.clipboard = {
 		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
 	},
 }
-
 vim.opt.clipboard = "unnamedplus"
+
+require("config.lazy")
