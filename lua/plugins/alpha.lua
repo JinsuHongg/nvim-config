@@ -26,3 +26,5 @@
 -- 		require("alpha").setup(startify.config)
 -- 	end,
 -- }
+--
+return {}
