@@ -1,38 +1,31 @@
 return {
-  {
-		"mason-org/mason.nvim",
-		config = function()
-			require("mason").setup()
-		end,
-	},
+	-- Just tell mason-lspconfig which servers to install
 	{
-		"mason-org/mason-lspconfig.nvim",
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "vimls", "pyright", "ts_ls" },
-			})
-		end,
+		"williamboman/mason-lspconfig.nvim",
+		opts = {
+			ensure_installed = { "lua_ls", "vimls", "basedpyright", "ts_ls" },
+		},
 	},
+
+	-- Only override basedpyright settings, everything else LazyVim handles
 	{
 		"neovim/nvim-lspconfig",
-		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			
-      vim.lsp.config("*", {
-				capabilities = capabilities,
-			})
-			vim.lsp.enable({ "pyright", "lua_ls", "vimls", "ts_ls" })
-			vim.diagnostic.config({
-				virtual_text = true,
-				signs = true,
-				underline = true,
-				update_in_insert = false,
-				severity_sort = true,
-			})
-
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-			vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-			vim.keymap.set({ "n" }, "<leader>ca", vim.lsp.buf.code_action, {})
-		end,
+		opts = {
+			servers = {
+				basedpyright = {
+					settings = {
+						basedpyright = {
+							analysis = { typeCheckingMode = "basic" },
+							inlayHints = {
+								variableTypes = true,
+								callArgumentNames = true,
+								functionReturnTypes = true,
+								genericTypes = true,
+							},
+						},
+					},
+				},
+			},
+		},
 	},
 }
