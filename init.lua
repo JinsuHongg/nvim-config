@@ -28,6 +28,6 @@ vim.g.clipboard = {
 		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
 	},
 }
-vim.opt.clipboard = "unnamedplus"
+-- vim.opt.clipboard = "unnamedplus"
 
 require("config.lazy")
