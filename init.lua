@@ -1,3 +1,8 @@
+local scratch = "/tmp/" .. vim.env.USER
+vim.env.XDG_DATA_HOME = scratch .. "/.local/share"
+vim.env.XDG_CACHE_HOME = scratch .. "/.cache"
+vim.env.XDG_STATE_HOME = scratch .. "/.local/state"
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -14,20 +19,5 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	end
 end
 vim.opt.rtp:prepend(lazypath)
-
 require("vim-options")
-
-vim.g.clipboard = {
-	name = "osc52",
-	copy = {
-		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-	},
-	paste = {
-		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
-	},
-}
--- vim.opt.clipboard = "unnamedplus"
-
 require("config.lazy")
