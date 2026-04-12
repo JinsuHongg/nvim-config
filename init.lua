@@ -3,6 +3,22 @@ vim.env.XDG_DATA_HOME = scratch .. "/.local/share"
 vim.env.XDG_CACHE_HOME = scratch .. "/.cache"
 vim.env.XDG_STATE_HOME = scratch .. "/.local/state"
 
+-- Force Neovim to use OSC 52
+vim.g.clipboard = {
+	name = "OSC 52",
+	copy = {
+		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+	},
+	paste = {
+		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+	},
+}
+
+vim.opt.clipboard = "unnamedplus"
+vim.opt.undofile = false
+
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -18,6 +34,9 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 		os.exit(1)
 	end
 end
+
 vim.opt.rtp:prepend(lazypath)
+
+-- Load your custom options and plugins
 require("vim-options")
 require("config.lazy")
