@@ -77,7 +77,7 @@ return {
 		require("dap-python").setup("python")
 		require("dap-python").test_runner = "pytest"
 		for _, config in pairs(dap.configurations.python or {}) do
-			config.console = "internalconsole"
+			config.console = "internalConsole"
 			config.justMyCode = false
 		end
 		dap.defaults.fallback.focus_terminal = false
