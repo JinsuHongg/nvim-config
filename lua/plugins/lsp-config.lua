@@ -2,7 +2,7 @@ return {
 	{
 		"mason-org/mason-lspconfig.nvim",
 		opts = {
-			ensure_installed = { "lua_ls", "vimls", "basedpyright", "ts_ls" },
+			ensure_installed = { "lua_ls", "vimls", "basedpyright", "ruff", "ts_ls" },
 		},
 	},
 	{
@@ -13,15 +13,18 @@ return {
 					settings = {
 						basedpyright = {
 							analysis = { typeCheckingMode = "basic" },
-							inlayHints = {
-								variableTypes = true,
-								callArgumentNames = true,
-								functionReturnTypes = true,
-								genericTypes = true,
-							},
 						},
 					},
 				},
+			},
+		},
+	},
+	{
+		"mfussenegger/nvim-lint",
+		event = "VeryLazy",
+		opts = {
+			linters_by_ft = {
+				python = { "ruff" },
 			},
 		},
 	},
