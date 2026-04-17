@@ -11,42 +11,49 @@ return {
 			function()
 				require("dap").continue()
 			end,
+			desc = "debug:Start/continue debugger",
 		},
 		{
 			"<f10>",
 			function()
 				require("dap").step_over()
 			end,
+			desc = "debug:Step over",
 		},
 		{
 			"<f11>",
 			function()
 				require("dap").step_into()
 			end,
+			desc = "debug:Step into",
 		},
 		{
 			"<f12>",
 			function()
 				require("dap").step_out()
 			end,
+			desc = "debug:Step out",
 		},
 		{
 			"<leader>b",
 			function()
 				require("dap").toggle_breakpoint()
 			end,
+			desc = "debug:Toggle breakpoint",
 		},
 		{
 			"<leader>B",
 			function()
 				require("dap").set_breakpoint(vim.fn.input("breakpoint condition: "))
 			end,
+			desc = "debug:Set conditional breakpoint",
 		},
 		{
 			"<leader>du",
 			function()
 				require("dapui").toggle()
 			end,
+			desc = "debug:Toggle debugger UI",
 		},
 	},
 	config = function()
@@ -127,10 +134,10 @@ return {
 		})
 		-- signs
 		local signs = {
-			dapbreakpoint = { text = "🔴" },
-			dapbreakpointcondition = { text = "🟡" },
-			daplogpoint = { text = "🟢" },
-			dapstopped = { text = "➡️", linehl = "visual" },
+			DapBreakpoint = { text = "🔴" },
+			DapBreakpointCondition = { text = "🟡" },
+			DapLogPoint = { text = "🟢" },
+			DapStopped = { text = "➡️", linehl = "Visual" },
 		}
 		for name, opts in pairs(signs) do
 			vim.fn.sign_define(
