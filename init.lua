@@ -1,7 +1,7 @@
-local scratch = "/tmp/" .. vim.env.USER
-vim.env.XDG_DATA_HOME = scratch .. "/.local/share"
-vim.env.XDG_CACHE_HOME = scratch .. "/.cache"
-vim.env.XDG_STATE_HOME = scratch .. "/.local/state"
+-- local scratch = "/tmp/" .. vim.env.USER
+-- vim.env.XDG_DATA_HOME = scratch .. "/.local/share"
+-- vim.env.XDG_CACHE_HOME = scratch .. "/.cache"
+-- vim.env.XDG_STATE_HOME = scratch .. "/.local/state"
 
 -- 1. Disable all automatic clipboard detection
 vim.opt.clipboard = ""
